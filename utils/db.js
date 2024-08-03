@@ -30,12 +30,12 @@ class DBClient {
 
   async nbUsers() {
     if (!this.isAlive()) throw new Error('Database not connected');
-    return await this.usersCollection.countDocuments();
+    return this.usersCollection.countDocuments();
   }
 
   async nbFiles() {
     if (!this.isAlive()) throw new Error('Database not connected');
-    return await this.filesCollection.countDocuments();
+    return this.filesCollection.countDocuments();
   }
 }
 
