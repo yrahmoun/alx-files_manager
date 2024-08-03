@@ -1,24 +1,25 @@
-import redisClient from '../utils/redis';
-import dbClient from '../utils/db';
+/* eslint-disable no-unused-vars */
+import { Request, Response, NextFunction } from 'express';
+import { getUserFromXToken, getUserFromAuthorization } from '../utils/auth';
+
+export const basicAuthenticate = async (req, res, next) => {
+  const user = await getUserFromAuthorization(req);
+
+  if (!user) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+  req.user = user;
+  next();
+};
 
 export const xTokenAuthenticate = async (req, res, next) => {
-  try {
-    const token = req.headers['x-token'];
-    if (!token) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+  const user = await getUserFromXToken(req);
 
-    const tokenKey = `auth_${token}`;
-    const userId = await redisClient.get(tokenKey);
-
-    if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    req.user = { _id: userId };
-    next();
-  } catch (error) {
-    console.error('Error in xTokenAuthenticate:', error);
-    res.status(500).json({ error: 'Internal server error' });
+  if (!user) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
   }
+  req.user = user;
+  next();
 };
