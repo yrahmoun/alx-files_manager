@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { xTokenAuthenticate } from '../middlewares/auth';
 import AppController from '../controllers/AppController';
 import AuthController from '../controllers/AuthController';
 import UserController from '../controllers/UsersController';
